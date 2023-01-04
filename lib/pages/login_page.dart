@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/pages/pages.dart';
+import 'package:productos_app/providers/login_form_provider.dart';
 import 'package:productos_app/ui/input_decorations.dart';
 import 'package:productos_app/utils/app_color.dart';
 import 'package:productos_app/widgets/widgets.dart';
+import 'package:provider/provider.dart';
 
 class LoginPage extends StatelessWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -22,7 +25,7 @@ class LoginPage extends StatelessWidget {
                 const SizedBox(height: 10),
                 Text("Login", style: Theme.of(context).textTheme.headline4),
                 const SizedBox(height: 30),
-                _LoginForm()
+                ChangeNotifierProvider(create: (context) => LoginFormProvider(), child: _LoginForm())
               ],
             )),
             const SizedBox(height: 50),
@@ -38,38 +41,63 @@ class LoginPage extends StatelessWidget {
 class _LoginForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final formProvider = Provider.of<LoginFormProvider>(context);
     return Form(
+        key: formProvider.formKey,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
         child: Column(
-      children: [
-        TextFormField(
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          decoration: InputDecorations.authInputDecoration(
-              hintText: "john.doe@gmail.com", labelText: "Correo electrónico", prefixIcon: Icons.alternate_email_sharp),
-        ),
-        const SizedBox(height: 30),
-        TextFormField(
-          autocorrect: false,
-          keyboardType: TextInputType.emailAddress,
-          obscureText: true,
-          decoration: InputDecorations.authInputDecoration(
-              hintText: "*****", labelText: "Contraseña", prefixIcon: Icons.lock_outline),
-        ),
-        const SizedBox(height: 30),
-        MaterialButton(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          disabledColor: Colors.grey,
-          elevation: 0,
-          color: AppColor.primaryColor,
-          onPressed: () {},
-          child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
-              child: const Text(
-                "Ingresar",
-                style: TextStyle(color: Colors.white),
-              )),
-        )
-      ],
-    ));
+          children: [
+            TextFormField(
+              controller: formProvider.emailController,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: "john.doe@gmail.com",
+                  labelText: "Correo electrónico",
+                  prefixIcon: Icons.alternate_email_sharp),
+              validator: (value) {
+                String pattern =
+                    r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                RegExp regExp = RegExp(pattern);
+                return regExp.hasMatch(value ?? "") ? null : "El valor ingresado no luce como un correo";
+              },
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: formProvider.passwordController,
+              autocorrect: false,
+              keyboardType: TextInputType.emailAddress,
+              obscureText: true,
+              decoration: InputDecorations.authInputDecoration(
+                  hintText: "*****", labelText: "Contraseña", prefixIcon: Icons.lock_outline),
+              validator: (value) {
+                if (value != null && value.length >= 6) return null;
+                return "La contraseña debe ser de 6 caracteres";
+              },
+            ),
+            const SizedBox(height: 30),
+            MaterialButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+              disabledColor: Colors.grey,
+              elevation: 0,
+              color: AppColor.primaryColor,
+              onPressed: formProvider.isLoading
+                  ? null
+                  : () async {
+                      FocusScope.of(context).unfocus();
+                      if (!formProvider.isValidForm()) return;
+                      formProvider.isLoading = true;
+                      await Future.delayed(const Duration(seconds: 2));
+                      formProvider.isLoading = false;
+                      Navigator.pushReplacementNamed(context, HomePage.routeName);
+                    },
+              child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
+                  child: formProvider.isLoading
+                      ? const CircularProgressIndicator.adaptive()
+                      : const Text("Ingresar", style: TextStyle(color: Colors.white))),
+            )
+          ],
+        ));
   }
 }
