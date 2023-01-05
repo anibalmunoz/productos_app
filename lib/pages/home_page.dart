@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:productos_app/models/models.dart';
 import 'package:productos_app/pages/pages.dart';
 import 'package:productos_app/services/product_service.dart';
 import 'package:productos_app/widgets/widgets.dart';
@@ -20,18 +21,19 @@ class HomePage extends StatelessWidget {
       body: ListView.builder(
         itemCount: prodProvider.products.length,
         itemBuilder: (context, index) => GestureDetector(
-            onTap: () {
-              prodProvider.selectedProduct = prodProvider.products[index].copy();
-              Navigator.pushNamed(context, ProductPage.routeName);
-            },
-            child: ProductCard(
-              product: prodProvider.products[index],
-            )),
+          onTap: () {
+            prodProvider.selectedProduct = prodProvider.products[index].copy();
+            Navigator.pushNamed(context, ProductPage.routeName);
+          },
+          child: ProductCard(product: prodProvider.products[index]),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: const Icon(Icons.add),
-      ),
+          onPressed: () {
+            prodProvider.selectedProduct = Product(available: true, name: "", price: 0.0);
+            Navigator.pushNamed(context, ProductPage.routeName);
+          },
+          child: const Icon(Icons.add)),
     );
   }
 }

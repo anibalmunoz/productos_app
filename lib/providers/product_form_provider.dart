@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 
 class ProductFormProvider extends ChangeNotifier {
-  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   Product product;
 
   ProductFormProvider({required this.product}) {
     igualarVariables();
   }
-
+  GlobalKey<FormState> formkey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final priceController = TextEditingController();
 
@@ -23,12 +22,13 @@ class ProductFormProvider extends ChangeNotifier {
     } else {
       product.price = double.parse(priceController.text);
     }
+    product.name = nameController.text;
+
     return formkey.currentState?.validate() ?? false;
   }
 
   updateAvailable(bool value) {
-    print(value);
-    this.product.available = value;
+    product.available = value;
     notifyListeners();
   }
 }
