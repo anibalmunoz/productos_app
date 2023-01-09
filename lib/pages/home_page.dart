@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/models/models.dart';
 import 'package:productos_app/pages/pages.dart';
+import 'package:productos_app/services/auth_service.dart';
 import 'package:productos_app/services/product_service.dart';
 import 'package:productos_app/utils/app_color.dart';
 import 'package:productos_app/widgets/widgets.dart';
@@ -14,11 +15,18 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final prodProvider = Provider.of<ProductService>(context);
-
+    final authService = Provider.of<AuthService>(context, listen: false);
     if (prodProvider.isLoading) return const LoadingPage();
 
     return Scaffold(
-      appBar: AppBar(title: const Text("Productos")),
+      appBar: AppBar(title: const Text("Productos"), actions: [
+        IconButton(
+            onPressed: () {
+              authService.logout();
+              Navigator.pushReplacementNamed(context, LoginPage.routeName);
+            },
+            icon: const Icon(Icons.logout))
+      ]),
       body: RefreshIndicator(
         color: AppColor.accentColor,
         onRefresh: () => prodProvider.onRefresh(),

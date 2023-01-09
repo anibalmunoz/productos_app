@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:productos_app/pages/pages.dart';
 import 'package:productos_app/providers/login_form_provider.dart';
+import 'package:productos_app/services/services.dart';
 import 'package:productos_app/ui/input_decorations.dart';
 import 'package:productos_app/utils/app_color.dart';
 import 'package:productos_app/widgets/widgets.dart';
@@ -93,15 +94,21 @@ class _LoginForm extends StatelessWidget {
                       FocusScope.of(context).unfocus();
                       if (!formProvider.isValidForm()) return;
                       formProvider.isLoading = true;
-                      await Future.delayed(const Duration(seconds: 2));
+                      final authService = Provider.of<AuthService>(context, listen: false);
+                      final String? errorMessage =
+                          await authService.createUser(formProvider.email, formProvider.password);
+                      if (errorMessage == null) {
+                        Navigator.pushReplacementNamed(context, HomePage.routeName);
+                      } else {
+                        NotificationsService.showSnackbar(errorMessage);
+                      }
                       formProvider.isLoading = false;
-                      Navigator.pushReplacementNamed(context, HomePage.routeName);
                     },
               child: Container(
                   padding: const EdgeInsets.symmetric(horizontal: 80, vertical: 15),
                   child: formProvider.isLoading
                       ? const CircularProgressIndicator.adaptive()
-                      : const Text("Ingresar", style: TextStyle(color: Colors.white))),
+                      : const Text("Crear cuenta", style: TextStyle(color: Colors.white))),
             )
           ],
         ));

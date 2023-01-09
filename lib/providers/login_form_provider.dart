@@ -19,7 +19,6 @@ class LoginFormProvider extends ChangeNotifier {
   bool isValidForm() {
     email = emailController.text;
     password = passwordController.text;
-    print("$email  $password");
     return formKey.currentState?.validate() ?? false;
   }
 }

@@ -1,1 +1,3 @@
-class AppConfig {}
+class AppConfig {
+  static String idToken = "idToken";
+}
