@@ -20,7 +20,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Productos App',
-      initialRoute: HomePage.routeName,
+      initialRoute: LoginPage.routeName,
       routes: getAppRoutes,
       theme: getAppTheme(),
     );

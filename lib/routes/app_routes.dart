@@ -5,6 +5,7 @@ Map<String, WidgetBuilder> get getAppRoutes {
   return {
     LoginPage.routeName: (context) => const LoginPage(),
     HomePage.routeName: (context) => const HomePage(),
-    ProductPage.routeName: (context) => const ProductPage()
+    ProductPage.routeName: (context) => const ProductPage(),
+    RegisterPage.routeName: (context) => const RegisterPage()
   };
 }

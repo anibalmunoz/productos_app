@@ -3,7 +3,6 @@
 //     final product = productFromMap(jsonString);
 
 import 'dart:convert';
-import 'dart:math';
 
 class Product {
   Product({required this.available, required this.name, this.picture, required this.price, this.id});

@@ -6,10 +6,10 @@ import 'package:productos_app/utils/app_color.dart';
 import 'package:productos_app/widgets/widgets.dart';
 import 'package:provider/provider.dart';
 
-class LoginPage extends StatelessWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class RegisterPage extends StatelessWidget {
+  const RegisterPage({Key? key}) : super(key: key);
 
-  static const String routeName = "login";
+  static const String routeName = "register";
 
   @override
   Widget build(BuildContext context) {
@@ -23,18 +23,18 @@ class LoginPage extends StatelessWidget {
                 child: Column(
               children: [
                 const SizedBox(height: 10),
-                Text("Login", style: Theme.of(context).textTheme.headline4),
+                Text("Crear cuenta", style: Theme.of(context).textTheme.headline4),
                 const SizedBox(height: 30),
                 ChangeNotifierProvider(create: (context) => LoginFormProvider(), child: _LoginForm())
               ],
             )),
             const SizedBox(height: 50),
             TextButton(
-              onPressed: () => Navigator.pushReplacementNamed(context, RegisterPage.routeName),
+              onPressed: () => Navigator.pushReplacementNamed(context, LoginPage.routeName),
               style: ButtonStyle(
                   overlayColor: MaterialStateProperty.all(Colors.indigo.withOpacity(0.1)),
                   shape: MaterialStateProperty.all(const StadiumBorder())),
-              child: const Text("Crear una nueva cuenta", style: TextStyle(fontSize: 18, color: Colors.black87)),
+              child: const Text("¿Ya tienes una cuenta?", style: TextStyle(fontSize: 18, color: Colors.black87)),
             ),
             const SizedBox(height: 30),
           ],
